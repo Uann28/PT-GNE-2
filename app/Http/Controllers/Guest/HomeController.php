@@ -11,39 +11,75 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // 1. DATA BERITA (Tetap pakai kode lama kamu)
-        $information = Information::where('status', 'publish')
-            ->latest()
-            ->take(3)
-            ->get();
+        // --- DUMMY DATA PRODUK (untuk Section 5) ---
+        $sectorsData = [
+            [
+                'id' => 'manufaktur',
+                'label' => 'Sektor Manufaktur',
+                'items' => [
+                    [
+                        'name' => 'Paving Block',
+                        'slug' => 'paving',
+                        'desc' => 'Beton pracetak mutu tinggi K300-K500 untuk jalan dan trotoar.',
+                        'img' => '/images/paving/bata.png' // Pastikan path benar
+                    ],
+                    [
+                        'name' => 'U-Ditch',
+                        'slug' => 'uditch',
+                        'desc' => 'Saluran air drainase tipe U dengan tulangan baja SNI.',
+                        'img' => '/images/uditch/uditch1.png'
+                    ],
+                    [
+                        'name' => 'Buis Beton',
+                        'slug' => 'buis',
+                        'desc' => 'Pipa beton pracetak untuk sumur resapan dan gorong-gorong.',
+                        'img' => '/images/buis/buis1.png'
+                    ],
+                ]
+            ],
+            [
+                'id' => 'konstruksi',
+                'label' => 'Sektor Konstruksi',
+                'items' => [
+                    [
+                        'name' => 'Excavator PC-200',
+                        'slug' => 'excavator',
+                        'desc' => 'Penyewaan alat berat untuk kebutuhan cut & fill dan galian.',
+                        'img' => '/images/konstruksi/excavator.jpg'
+                    ],
+                    [
+                        'name' => 'Bulldozer D85-SS',
+                        'slug' => 'bulldozer',
+                        'desc' => 'Alat berat pendorong material untuk pembersihan lahan (land clearing).',
+                        'img' => '/images/konstruksi/bulldozer.jpg'
+                    ],
+                ]
+            ]
+        ];
 
-        // 2. DATA SEKTOR & PRODUK (Baru)
-        // Kita ambil semua sektor beserta produknya (diload dengan gambar)
-        $rawSectors = Sector::with(['products.images'])->get();
+        // --- DUMMY DATA BERITA (untuk Section 6) ---
+        // Menggunakan object agar sesuai dengan sintaks $news->title di Blade
+        $information = collect([
+            (object)[
+                'title' => 'PT GNE Dukung Pembangunan Sirkuit Mandalika',
+                'slug' => 'gne-dukung-mandalika',
+                'image' => 'home/1.jpg', // Path di dalam storage/app/public/
+                'published_at' => now()->subDays(2),
+            ],
+            (object)[
+                'title' => 'Inovasi Produk Beton Berstandar Internasional',
+                'slug' => 'inovasi-beton-sni',
+                'image' => 'home/2.jpg',
+                'published_at' => now()->subDays(5),
+            ],
+            (object)[
+                'title' => 'Kunjungan Kerja Gubernur NTB ke Pabrik GNE',
+                'slug' => 'kunjungan-gubernur-ntb',
+                'image' => 'home/1.jpg',
+                'published_at' => now()->subMonth(),
+            ],
+        ]);
 
-        // Format ulang agar sesuai dengan struktur JSON yang diminta Javascript
-        $sectorsData = $rawSectors->map(function($sector) {
-            return [
-                'id'     => 'sector-' . $sector->id,  // ID unik untuk Tab
-                'label'  => $sector->name,            // Label tombol Tab
-                'layout' => 'slider',                 // Layout default slider
-                // Ambil maks 6 produk per sektor agar loading cepat
-                'items'  => $sector->products->take(6)->map(function($product) {
-                    return [
-                        'name' => $product->name,
-                        // Batasi deskripsi max 60 karakter
-                        'desc' => Str::limit($product->description ?? 'Produk berkualitas PT GNE', 60),
-                        'slug' => $product->slug,
-                        // Ambil gambar pertama, atau placeholder jika kosong
-                        'img'  => $product->images->first() 
-                                    ? asset('storage/' . $product->images->first()->image_path) 
-                                    : asset('images/placeholder.png'),
-                    ];
-                })->values() // Reset key array agar jadi [0,1,2] bukan [4,5,6]
-            ];
-        });
-
-        // 3. Kirim ke View (sectorsData untuk JS, information untuk Blade)
-        return view('user.pages.home', compact('information', 'sectorsData'));
+        return view('user.pages.home', compact('sectorsData', 'information'));
     }
 }

@@ -2,6 +2,54 @@
 
 @section('title', 'Laporan Publikasi - PT Gerbang NTB Emas')
 
+@php
+    // Simulasi data laporan
+    $dummyReports = collect([
+        (object)[
+            'title' => 'Laporan Tahunan (Annual Report) PT Gerbang NTB Emas 2025',
+            'year' => '2025',
+            'file_path' => '#',
+            'file_size' => '12.4 MB',
+            'published_at' => now()->subMonths(1),
+        ],
+        (object)[
+            'title' => 'Laporan Keuangan Audited Konsolidasi - Desember 2024',
+            'year' => '2024',
+            'file_path' => '#',
+            'file_size' => '8.2 MB',
+            'published_at' => now()->subMonths(5),
+        ],
+        (object)[
+            'title' => 'Laporan Pelaksanaan Good Corporate Governance (GCG) 2024',
+            'year' => '2024',
+            'file_path' => '#',
+            'file_size' => '5.1 MB',
+            'published_at' => now()->subMonths(6),
+        ],
+        (object)[
+            'title' => 'Profil Perusahaan (Company Profile) GNE Terbaru',
+            'year' => '2025',
+            'file_path' => '#',
+            'file_size' => '15.0 MB',
+            'published_at' => now()->subDays(10),
+        ],
+    ]);
+
+    // Logika Filter Sederhana (Jika ada klik filter)
+    $selectedYear = request('tahun');
+    if ($selectedYear) {
+        $dummyReports = $dummyReports->where('year', $selectedYear);
+    }
+
+    // Karena di Blade kamu menggunakan variabel $reports, kita timpa saja
+    // Kita buat manual paginasinya agar tidak error saat memanggil $reports->links()
+    $reports = new \Illuminate\Pagination\LengthAwarePaginator(
+        $dummyReports, 
+        $dummyReports->count(), 
+        10
+    );
+@endphp
+
 @section('content')
 
 {{-- 1. HERO SECTION --}}
@@ -121,10 +169,13 @@
 
                     {{-- Action Button --}}
                     <div class="w-full md:w-auto mt-2 md:mt-0 self-start md:self-center">
-                        <a href="{{ asset('storage/' . $item->file_path) }}" target="_blank" class="group/btn relative overflow-hidden flex items-center justify-center gap-2 w-full md:w-auto px-6 py-3.5 bg-white border border-gray-200 text-[#334168] rounded-xl font-bold transition-all duration-300 hover:border-[#F88008] hover:text-[#F88008] shadow-sm hover:shadow-md">
+                        {{-- Cari bagian ini di Blade kamu dan sesuaikan href-nya --}}
+                        <a href="" 
+                            onclick="{{ $item->file_path == '#' ? 'alert(\'File dummy belum tersedia\')' : '' }}"
+                            target="_blank" 
+                            class="group/btn ...">
                             <span class="relative z-10">Unduh</span>
-                            <i class="fa-solid fa-download h-4 w-4 relative z-10 transform group-hover/btn:translate-y-0.5 transition-transform"></i>
-                            <div class="absolute inset-0 bg-gray-50 transform scale-x-0 group-hover/btn:scale-x-100 transition-transform origin-left duration-300 -z-0"></div>
+                            <i class="fa-solid fa-download ..."></i>
                         </a>
                     </div>
                 </div>
@@ -152,3 +203,4 @@
 </section>
 
 @endsection
+
