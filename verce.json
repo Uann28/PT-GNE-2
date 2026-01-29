@@ -1,32 +1,5 @@
 {
-    "version": 2,
-    "functions": {
-        "api/index.php": { "runtime": "vercel-php@0.6.0" }
-    },
-    "outputDirectory": ".",
-    "routes": [
-        { "handle": "filesystem" },
-        { "src": "/(.*)", "dest": "/api/index.php" }
-    ],
-    "env": {
-        "APP_NAME": "PT GNE",
-        "APP_ENV": "production",
-        "APP_KEY": "base64:Ft4Pl4Lswuy3KIzCP/tDaI3IgSu3MJfQRpaF1QWjU6Q=",
-        "APP_DEBUG": "false",
-        "APP_URL": "https://pt-gne.vercel.app",
-        "APP_CONFIG_CACHE": "/tmp/config.php",
-        "APP_EVENTS_CACHE": "/tmp/events.php",
-        "APP_PACKAGES_CACHE": "/tmp/packages.php",
-        "APP_ROUTES_CACHE": "/tmp/routes.php",
-        "APP_SERVICES_CACHE": "/tmp/services.php",
-        "VIEW_COMPILED_PATH": "/tmp",
-        "CACHE_STORE": "array",
-        "SESSION_DRIVER": "cookie",
-        "LOG_CHANNEL": "stderr",
-        "DB_CONNECTION": "mysql",
-        "DB_HOST": "4gg.h.filess.io",
-        "DB_PORT": "3306",
-        "DB_DATABASE": "db2024_stormtorn",
-        "DB_USERNAME": "db2024_stormtorn"
-    }
+    "rewrites": [
+        { "source": "/(.*)", "destination": "/" }
+    ]
 }
